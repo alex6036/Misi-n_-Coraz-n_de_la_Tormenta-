@@ -19,7 +19,7 @@ st.markdown("**Misión:** Dashboard operativo en vivo — Precog, Chronos y K-La
 assets_dir = Path(__file__).resolve().parents[1] / "data" / "assets"
 assets_dir.mkdir(parents=True, exist_ok=True)
 
-def _create_placeholder(path: Path, text: str, size=(800,450)):
+def _create_placeholder(path: Path, text: str, size=(800, 450)):
     if path.exists():
         return
     img = Image.new("RGB", size, color=(18, 22, 30))
@@ -28,9 +28,15 @@ def _create_placeholder(path: Path, text: str, size=(800,450)):
         font = ImageFont.load_default()
     except:
         font = None
-    w, h = draw.textsize(text, font=font)
-    draw.text(((size[0]-w)/2, (size[1]-h)/2), text, fill=(220,220,220), font=font)
+    # Compatibilidad con Pillow >=10: usar textbbox si existe
+    if hasattr(draw, "textbbox"):
+        bbox = draw.textbbox((0, 0), text, font=font)
+        w, h = bbox[2] - bbox[0], bbox[3] - bbox[1]
+    else:
+        w, h = draw.textsize(text, font=font)
+    draw.text(((size[0] - w) / 2, (size[1] - h) / 2), text, fill=(220, 220, 220), font=font)
     img.save(path)
+
 
 map_path = assets_dir / "map_clusters.png"
 chronos_fortaleza = assets_dir / "chronos_fortaleza.png"
@@ -73,7 +79,8 @@ if section == "Precog: Monitor de Riesgo":
     col1, col2 = st.columns([2,1])
     with col1:
         st.subheader("Mapa de Calor de Riesgo")
-        st.image(str(map_path), use_column_width=True)
+        st.image(map_path, use_container_width=True)
+
         st.caption("Triángulo del Peligro: clústeres críticos marcados (placeholder).")
     with col2:
         st.subheader("Simulador Interactivo")
