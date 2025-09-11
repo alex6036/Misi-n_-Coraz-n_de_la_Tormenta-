@@ -1,5 +1,32 @@
 {
-  "VÍSPERA": {"trigger": "velocidad_viento >= 60 OR nivel_inundacion_cm >= 20", "steps": ["Notificar","Pre-alertar equipos","Monitorear 15 min"]},
-  "CÓDIGO ROJO": {"trigger": "velocidad_viento >= 90 OR nivel_inundacion_cm >= 80 OR score >= 0.9", "steps": ["Cortar rutas","Evacuar zonas","Notificar Junta"]},
-  "RENACIMIENTO": {"trigger": "score <= 0.4 for 3h", "steps": ["Evaluación de daños","Reapertura gradual","Informe final"]}
+  "VÍSPERA": {
+    "trigger": "velocidad_media >= 60 OR nivel_inundacion_cm >= 20",
+    "descripcion": "Preparación y vigilancia. Reforzar comunicaciones y preparar equipos en standby.",
+    "steps": [
+      "Notificar equipo local",
+      "Revisar rutas críticas",
+      "Activar monitorización intensiva (cada 5 min)"
+    ],
+    "responsables": ["Coordinador Local", "Equipo Operaciones"]
+  },
+  "CÓDIGO ROJO": {
+    "trigger": "velocidad_media >= 90 OR nivel_inundacion_cm >= 80 OR score >= 0.9",
+    "descripcion": "Alerta máxima. Proceder con medidas de protección y evacuación parciales.",
+    "steps": [
+      "Cortar rutas no seguras",
+      "Evacuación parcial en zonas críticas",
+      "Notificar Junta Directiva"
+    ],
+    "responsables": ["Jefe de Operaciones", "Seguridad", "Comms"]
+  },
+  "RENACIMIENTO": {
+    "trigger": "score <= 0.4",
+    "descripcion": "Fase de recuperación. Reapertura gradual y evaluación de daños.",
+    "steps": [
+      "Evaluación técnica",
+      "Reapertura controlada de servicios",
+      "Informe post-evento"
+    ],
+    "responsables": ["Equipo de Recuperación", "Auditoría"]
+  }
 }
