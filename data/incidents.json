@@ -1,0 +1,11 @@
+[
+  {
+    "id": 1,
+    "ts": "2025-09-11T21:00:00Z",
+    "score": 0.78,
+    "label": "ALTO",
+    "vars": {"velocidad_media": 95, "nivel_inundacion_cm": 40},
+    "protocol_activated": "CÓDIGO ROJO: TITÁN",
+    "actions": []
+  }
+]

@@ -1,0 +1,5 @@
+{
+  "VÍSPERA": {"trigger": "velocidad_viento >= 60 OR nivel_inundacion_cm >= 20", "steps": ["Notificar","Pre-alertar equipos","Monitorear 15 min"]},
+  "CÓDIGO ROJO": {"trigger": "velocidad_viento >= 90 OR nivel_inundacion_cm >= 80 OR score >= 0.9", "steps": ["Cortar rutas","Evacuar zonas","Notificar Junta"]},
+  "RENACIMIENTO": {"trigger": "score <= 0.4 for 3h", "steps": ["Evaluación de daños","Reapertura gradual","Informe final"]}
+}
