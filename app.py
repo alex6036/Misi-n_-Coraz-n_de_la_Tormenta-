@@ -3,6 +3,8 @@ import pandas as pd
 import numpy as np
 import time
 from pathlib import Path
+import plotly.express as px
+import plotly.graph_objects as go
 from utils.precog import VARIABLES, predecir_riesgo
 from utils.storage import read_json, write_json, path_asset, DATA_DIR
 from utils.simulator import simulate_and_record, _label_from_score
@@ -28,7 +30,6 @@ def _create_placeholder(path: Path, text: str, size=(800, 450)):
         font = ImageFont.load_default()
     except:
         font = None
-    # Compatibilidad con Pillow >=10: usar textbbox si existe
     if hasattr(draw, "textbbox"):
         bbox = draw.textbbox((0, 0), text, font=font)
         w, h = bbox[2] - bbox[0], bbox[3] - bbox[1]
@@ -36,7 +37,6 @@ def _create_placeholder(path: Path, text: str, size=(800, 450)):
         w, h = draw.textsize(text, font=font)
     draw.text(((size[0] - w) / 2, (size[1] - h) / 2), text, fill=(220, 220, 220), font=font)
     img.save(path)
-
 
 map_path = assets_dir / "map_clusters.png"
 chronos_fortaleza = assets_dir / "chronos_fortaleza.png"
@@ -49,7 +49,6 @@ _create_placeholder(chronos_bunker, "BÚNKER TECNOLÓGICO (placeholder)")
 protocols = read_json("protocols.json", {})
 incidents = read_json("incidents.json", [])
 
-# Inicializamos session_state
 if "events" not in st.session_state:
     st.session_state["events"] = incidents.copy()
 
@@ -71,6 +70,35 @@ def label_and_color(score):
         return "ALTO", "orange"
     return "CRÍTICO", "red"
 
+def mostrar_mapa_calor():
+    data = np.random.rand(10, 10)
+    fig = go.Figure(data=go.Heatmap(z=data, colorscale="RdBu"))
+    fig.update_layout(
+        title="Mapa de Calor de Riesgo",
+        xaxis_showgrid=False,
+        yaxis_showgrid=False,
+        template="plotly_dark"
+    )
+    st.plotly_chart(fig, use_container_width=True)
+
+def mostrar_contribuciones(contribs):
+    df = pd.DataFrame([
+        {"variable": k, "pct_contrib": v["pct_contrib"]}
+        for k, v in contribs.items()
+    ]).sort_values("pct_contrib", ascending=True)
+
+    fig = px.bar(
+        df,
+        x="pct_contrib",
+        y="variable",
+        orientation="h",
+        text=df["pct_contrib"].apply(lambda x: f"{x:.0%}"),
+        title="Contribución de cada variable al riesgo"
+    )
+    fig.update_layout(template="plotly_dark", yaxis_title="", xaxis_title="Porcentaje de contribución")
+    fig.update_traces(textposition="outside")
+    st.plotly_chart(fig, use_container_width=True)
+
 # ---------------------------
 # Sección: PRECOG
 # ---------------------------
@@ -79,12 +107,11 @@ if section == "Precog: Monitor de Riesgo":
     col1, col2 = st.columns([2,1])
     with col1:
         st.subheader("Mapa de Calor de Riesgo")
-        st.image(map_path, use_container_width=True)
+        mostrar_mapa_calor()
+        st.caption("Triángulo del Peligro: clústeres críticos marcados (simulado con datos aleatorios).")
 
-        st.caption("Triángulo del Peligro: clústeres críticos marcados (placeholder).")
     with col2:
         st.subheader("Simulador Interactivo")
-        # Generar sliders según VARIABLES
         inputs = {}
         for var, meta in VARIABLES.items():
             lo, hi = meta["min"], meta["max"]
@@ -94,30 +121,18 @@ if section == "Precog: Monitor de Riesgo":
                 val = st.slider(var.replace("_"," "), float(lo), float(hi), float((lo+hi)/4))
             inputs[var] = val
 
-        # Botón de simulación
         if st.button("Aplicar y Simular"):
             result = predecir_riesgo(inputs)
-            # Guardar registro
             res_record = simulate_and_record(inputs)
             st.session_state["events"].insert(0, res_record["incident"])
             st.success(f"Riesgo: {result['pct']}% — {label_and_color(result['score'])[0]}")
-            # Mostrar contribuciones
-            st.subheader("Contribuciones por variable")
-            contribs = result["contribuciones"]
-            df = pd.DataFrame([
-                {
-                    "variable": k,
-                    "valor": v["valor"],
-                    "normalizado": v["normalizado"],
-                    "peso": v["peso"],
-                    "pct_contrib": v["pct_contrib"]
-                } for k, v in contribs.items()
-            ]).sort_values("pct_contrib", ascending=False)
-            st.table(df)
+            mostrar_contribuciones(result["contribuciones"])
 
     st.subheader("Feed de eventos recientes")
     for ev in st.session_state["events"][:20]:
         st.markdown(f"- **{ev['ts']}** — {ev['label']} — `{ev['id']}` — {ev['vars']}")
+
+# (El resto de secciones se queda igual que en tu código original)
 
 # ---------------------------
 # Sección: CHRONOS
