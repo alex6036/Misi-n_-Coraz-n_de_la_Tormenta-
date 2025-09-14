@@ -1,1 +1,18 @@
-[]
+[
+  {
+    "id": "be841020",
+    "ts": "2025-09-14T14:05:55",
+    "score": 0.3236,
+    "pct": 32,
+    "label": "BAJO",
+    "vars": {
+      "velocidad_media": 34,
+      "intensidad_lluvia": 35,
+      "nivel_inundacion_cm": 109,
+      "densidad_trafico": 25,
+      "temperatura": 7
+    },
+    "protocol_activated": null,
+    "actions": []
+  }
+]

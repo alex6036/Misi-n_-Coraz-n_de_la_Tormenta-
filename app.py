@@ -10,6 +10,36 @@ from utils.storage import read_json, write_json, path_asset, DATA_DIR
 from utils.simulator import simulate_and_record, _label_from_score
 from PIL import Image, ImageDraw, ImageFont
 
+
+def mostrar_mapa_espana(datos=None):
+    """
+    Muestra un mapa interactivo de España con puntos de riesgo.
+    Si no se pasa 'datos', se generan valores aleatorios.
+    """
+    if datos is None:
+        datos = pd.DataFrame({
+            "ciudad": ["Madrid", "Barcelona", "Valencia", "Sevilla", "Bilbao", "Zaragoza"],
+            "lat": [40.4168, 41.3874, 39.4699, 37.3891, 43.2630, 41.6488],
+            "lon": [-3.7038, 2.1686, -0.3763, -5.9845, -2.9350, -0.8891],
+            "riesgo": np.random.randint(40, 100, size=6)  # valores aleatorios entre 40 y 100
+        })
+
+    fig = px.scatter_mapbox(
+        datos,
+        lat="lat",
+        lon="lon",
+        size="riesgo",
+        color="riesgo",
+        color_continuous_scale="RdYlGn_r",  # Rojo = más riesgo
+        size_max=40,
+        zoom=4.5,
+        mapbox_style="carto-darkmatter",  # Fondo oscuro estilo dashboard
+        hover_name="ciudad",
+        title="Mapa de Calor de Riesgo en España"
+    )
+
+    st.plotly_chart(fig, use_container_width=True)
+
 # ---------------------------
 # Inicialización y recursos
 # ---------------------------
@@ -107,8 +137,9 @@ if section == "Precog: Monitor de Riesgo":
     col1, col2 = st.columns([2,1])
     with col1:
         st.subheader("Mapa de Calor de Riesgo")
-        mostrar_mapa_calor()
-        st.caption("Triángulo del Peligro: clústeres críticos marcados (simulado con datos aleatorios).")
+        mostrar_mapa_espana()
+        st.caption("Mapa interactivo de clústeres de riesgo en España (datos simulados).")
+
 
     with col2:
         st.subheader("Simulador Interactivo")
