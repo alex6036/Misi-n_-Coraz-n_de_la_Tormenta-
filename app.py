@@ -178,13 +178,17 @@ elif section == "Chronos: Visión 2040":
     st.write("Selector de Estrategia y visualización de futuros (mapa dinámico con zonas estratégicas).")
     choice = st.radio("Estrategia", ["Fortaleza Verde", "Búnker Tecnológico"])
 
-    # Generamos datos aleatorios de ciudades y posiciones
-    datos = pd.DataFrame({
+    # Lista de ciudades y coordenadas
+    todas_ciudades = pd.DataFrame({
         "ciudad": ["Madrid", "Barcelona", "Valencia", "Sevilla", "Bilbao", "Zaragoza"],
         "lat": [40.4168, 41.3874, 39.4699, 37.3891, 43.2630, 41.6488],
         "lon": [-3.7038, 2.1686, -0.3763, -5.9845, -2.9350, -0.8891],
     })
 
+    # Elegimos aleatoriamente 3 ciudades
+    datos = todas_ciudades.sample(n=3, random_state=None).copy()
+
+    # Coloreamos según la estrategia
     if choice == "Fortaleza Verde":
         datos["tipo"] = "Fortaleza Verde"
         datos["color"] = "green"
@@ -199,7 +203,7 @@ elif section == "Chronos: Visión 2040":
         lon="lon",
         text="ciudad",
         color="color",
-        size=[10] * len(datos),  # mismo tamaño para todos
+        size=[15] * len(datos),  # tamaño fijo de los puntos
         zoom=4.5,
         mapbox_style="carto-darkmatter",
     )
@@ -213,18 +217,30 @@ elif section == "Chronos: Visión 2040":
     # Descripción de estrategia
     if choice == "Fortaleza Verde":
         st.subheader("Defensa estratégica — Fortaleza Verde")
-        st.write(
-            "Fortaleza Verde apuesta por infraestructuras resilientes y sostenibilidad. "
-            "Inversión en movilidad limpia, drenaje urbano y centro de control climático para minimizar impactos. "
-            "Beneficios: reducir exposición a eventos climáticos extremos, mejorar imagen corporativa y resiliencia logística en Madrid."
-        )
+
+        # Dividimos en dos columnas
+        col1, col2 = st.columns([2, 1])  # col1 más ancha para el texto, col2 para la imagen
+        with col1:
+            st.write(
+                "Fortaleza Verde apuesta por infraestructuras resilientes y sostenibilidad. "
+                "Inversión en movilidad limpia, drenaje urbano y centro de control climático para minimizar impactos. "
+                "Beneficios: reducir exposición a eventos climáticos extremos, mejorar imagen corporativa y resiliencia logística en Madrid."
+            )
+        with col2:
+            st.image("imagen/verde.png", use_container_width=True)  # usa la ruta de tu imagen
+
     else:
         st.subheader("Defensa estratégica — Búnker Tecnológico")
-        st.write(
-            "Búnker Tecnológico prioriza redundancia tecnológica, automatización y robustez en centros de datos. "
-            "Inversión en Réplica multi-región, sistemas autónomos de reruteo y control algorítmico de operaciones. "
-            "Beneficios: máxima continuidad operativa frente a fallos sistémicos y ciber-incidentes."
-        )
+        col1, col2 = st.columns([2, 1])  # col1 más ancha para el texto, col2 para la imagen
+        with col1:
+            st.write(
+                "Búnker Tecnológico prioriza redundancia tecnológica, automatización y robustez en centros de datos. "
+                "Inversión en Réplica multi-región, sistemas autónomos de reruteo y control algorítmico de operaciones. "
+                "Beneficios: máxima continuidad operativa frente a fallos sistémicos y ciber-incidentes."
+            )
+        with col2:
+            st.image("imagen/bunker.jpg", use_container_width=True)  # usa la ruta de tu imagen
+
 
 
 # ---------------------------
