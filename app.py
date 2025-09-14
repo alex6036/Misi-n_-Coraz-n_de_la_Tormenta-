@@ -9,6 +9,9 @@ from utils.precog import VARIABLES, predecir_riesgo
 from utils.storage import read_json, write_json, path_asset, DATA_DIR
 from utils.simulator import simulate_and_record, _label_from_score
 from PIL import Image, ImageDraw, ImageFont
+import plotly.io as pio
+pio.templates.default = "plotly_dark"  # Asegura modo oscuro global
+
 
 
 def mostrar_mapa_espana(datos=None):
@@ -21,7 +24,7 @@ def mostrar_mapa_espana(datos=None):
             "ciudad": ["Madrid", "Barcelona", "Valencia", "Sevilla", "Bilbao", "Zaragoza"],
             "lat": [40.4168, 41.3874, 39.4699, 37.3891, 43.2630, 41.6488],
             "lon": [-3.7038, 2.1686, -0.3763, -5.9845, -2.9350, -0.8891],
-            "riesgo": np.random.randint(40, 100, size=6)  # valores aleatorios entre 40 y 100
+            "riesgo": np.random.randint(40, 100, size=6)
         })
 
     fig = px.scatter_mapbox(
@@ -30,15 +33,15 @@ def mostrar_mapa_espana(datos=None):
         lon="lon",
         size="riesgo",
         color="riesgo",
-        color_continuous_scale="RdYlGn_r",  # Rojo = más riesgo
-        size_max=40,
+        color_continuous_scale="RdYlGn_r",
+        size_max=30,
         zoom=4.5,
-        mapbox_style="carto-darkmatter",  # Fondo oscuro estilo dashboard
+        mapbox_style="carto-darkmatter",
         hover_name="ciudad",
-        title="Mapa de Calor de Riesgo en España"
     )
-
+    fig.update_layout(title="Mapa de Calor de Riesgo en España", margin={"r":0,"t":30,"l":0,"b":0})
     st.plotly_chart(fig, use_container_width=True)
+
 
 # ---------------------------
 # Inicialización y recursos
@@ -172,10 +175,43 @@ if section == "Precog: Monitor de Riesgo":
 # ---------------------------
 elif section == "Chronos: Visión 2040":
     st.header("Chronos — Visión Estratégica 2040")
-    st.write("Selector de Estrategia y visualización de futuros (imágenes generadas por GAN - placeholders).")
+    st.write("Selector de Estrategia y visualización de futuros (mapa dinámico con zonas estratégicas).")
     choice = st.radio("Estrategia", ["Fortaleza Verde", "Búnker Tecnológico"])
+
+    # Generamos datos aleatorios de ciudades y posiciones
+    datos = pd.DataFrame({
+        "ciudad": ["Madrid", "Barcelona", "Valencia", "Sevilla", "Bilbao", "Zaragoza"],
+        "lat": [40.4168, 41.3874, 39.4699, 37.3891, 43.2630, 41.6488],
+        "lon": [-3.7038, 2.1686, -0.3763, -5.9845, -2.9350, -0.8891],
+    })
+
     if choice == "Fortaleza Verde":
-        st.image(str(chronos_fortaleza), use_column_width=True)
+        datos["tipo"] = "Fortaleza Verde"
+        datos["color"] = "green"
+    else:
+        datos["tipo"] = "Búnker Tecnológico"
+        datos["color"] = "red"
+
+    # Creamos el mapa interactivo
+    fig = px.scatter_mapbox(
+        datos,
+        lat="lat",
+        lon="lon",
+        text="ciudad",
+        color="color",
+        size=[10] * len(datos),  # mismo tamaño para todos
+        zoom=4.5,
+        mapbox_style="carto-darkmatter",
+    )
+    fig.update_layout(
+        title=f"Mapa Estratégico — {choice}",
+        showlegend=False
+    )
+
+    st.plotly_chart(fig, use_container_width=True)
+
+    # Descripción de estrategia
+    if choice == "Fortaleza Verde":
         st.subheader("Defensa estratégica — Fortaleza Verde")
         st.write(
             "Fortaleza Verde apuesta por infraestructuras resilientes y sostenibilidad. "
@@ -183,13 +219,13 @@ elif section == "Chronos: Visión 2040":
             "Beneficios: reducir exposición a eventos climáticos extremos, mejorar imagen corporativa y resiliencia logística en Madrid."
         )
     else:
-        st.image(str(chronos_bunker), use_column_width=True)
         st.subheader("Defensa estratégica — Búnker Tecnológico")
         st.write(
             "Búnker Tecnológico prioriza redundancia tecnológica, automatización y robustez en centros de datos. "
             "Inversión en Réplica multi-región, sistemas autónomos de reruteo y control algorítmico de operaciones. "
             "Beneficios: máxima continuidad operativa frente a fallos sistémicos y ciber-incidentes."
         )
+
 
 # ---------------------------
 # Sección: K-LANG
