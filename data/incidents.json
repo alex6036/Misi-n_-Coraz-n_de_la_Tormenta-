@@ -1,5 +1,309 @@
 [
   {
+    "id": "ba7cbf9f",
+    "ts": "2025-09-14T15:46:13",
+    "score": 0.351,
+    "pct": 35,
+    "label": "BAJO",
+    "vars": {
+      "velocidad_media": 37,
+      "intensidad_lluvia": 50,
+      "nivel_inundacion_cm": 125,
+      "densidad_trafico": 25,
+      "temperatura": 7
+    },
+    "protocol_activated": null,
+    "actions": []
+  },
+  {
+    "id": "d0a32ac9",
+    "ts": "2025-09-14T15:05:51",
+    "score": 0.2344,
+    "pct": 23,
+    "label": "BAJO",
+    "vars": {
+      "velocidad_media": 21,
+      "intensidad_lluvia": 21,
+      "nivel_inundacion_cm": 18,
+      "densidad_trafico": 7,
+      "temperatura": -10
+    },
+    "protocol_activated": null,
+    "actions": []
+  },
+  {
+    "id": "7116dc0e",
+    "ts": "2025-09-14T15:05:35",
+    "score": 0.7482,
+    "pct": 75,
+    "label": "ALTO",
+    "vars": {
+      "velocidad_media": 120,
+      "intensidad_lluvia": 138,
+      "nivel_inundacion_cm": 410,
+      "densidad_trafico": 63,
+      "temperatura": -10
+    },
+    "protocol_activated": null,
+    "actions": []
+  },
+  {
+    "id": "54531901",
+    "ts": "2025-09-14T15:05:32",
+    "score": 0.7199,
+    "pct": 72,
+    "label": "MEDIO",
+    "vars": {
+      "velocidad_media": 120,
+      "intensidad_lluvia": 138,
+      "nivel_inundacion_cm": 344,
+      "densidad_trafico": 63,
+      "temperatura": -10
+    },
+    "protocol_activated": null,
+    "actions": []
+  },
+  {
+    "id": "149bd922",
+    "ts": "2025-09-14T15:05:25",
+    "score": 0.6938,
+    "pct": 69,
+    "label": "MEDIO",
+    "vars": {
+      "velocidad_media": 120,
+      "intensidad_lluvia": 110,
+      "nivel_inundacion_cm": 344,
+      "densidad_trafico": 63,
+      "temperatura": -10
+    },
+    "protocol_activated": null,
+    "actions": []
+  },
+  {
+    "id": "47477be2",
+    "ts": "2025-09-14T15:05:22",
+    "score": 0.6274,
+    "pct": 63,
+    "label": "MEDIO",
+    "vars": {
+      "velocidad_media": 120,
+      "intensidad_lluvia": 110,
+      "nivel_inundacion_cm": 209,
+      "densidad_trafico": 63,
+      "temperatura": -10
+    },
+    "protocol_activated": null,
+    "actions": []
+  },
+  {
+    "id": "854150e1",
+    "ts": "2025-09-14T15:05:15",
+    "score": 0.5923,
+    "pct": 59,
+    "label": "MEDIO",
+    "vars": {
+      "velocidad_media": 120,
+      "intensidad_lluvia": 110,
+      "nivel_inundacion_cm": 142,
+      "densidad_trafico": 63,
+      "temperatura": -10
+    },
+    "protocol_activated": null,
+    "actions": []
+  },
+  {
+    "id": "f46aea94",
+    "ts": "2025-09-14T15:05:11",
+    "score": 0.57,
+    "pct": 57,
+    "label": "BAJO",
+    "vars": {
+      "velocidad_media": 120,
+      "intensidad_lluvia": 110,
+      "nivel_inundacion_cm": 142,
+      "densidad_trafico": 40,
+      "temperatura": -10
+    },
+    "protocol_activated": null,
+    "actions": []
+  },
+  {
+    "id": "d30c009b",
+    "ts": "2025-09-14T15:05:06",
+    "score": 0.5769,
+    "pct": 58,
+    "label": "BAJO",
+    "vars": {
+      "velocidad_media": 120,
+      "intensidad_lluvia": 110,
+      "nivel_inundacion_cm": 142,
+      "densidad_trafico": 40,
+      "temperatura": 10
+    },
+    "protocol_activated": null,
+    "actions": []
+  },
+  {
+    "id": "68abc600",
+    "ts": "2025-09-14T15:05:00",
+    "score": 0.5504,
+    "pct": 55,
+    "label": "BAJO",
+    "vars": {
+      "velocidad_media": 120,
+      "intensidad_lluvia": 110,
+      "nivel_inundacion_cm": 142,
+      "densidad_trafico": 13,
+      "temperatura": 10
+    },
+    "protocol_activated": null,
+    "actions": []
+  },
+  {
+    "id": "49114c0b",
+    "ts": "2025-09-14T15:04:53",
+    "score": 0.5011,
+    "pct": 50,
+    "label": "BAJO",
+    "vars": {
+      "velocidad_media": 120,
+      "intensidad_lluvia": 66,
+      "nivel_inundacion_cm": 142,
+      "densidad_trafico": 13,
+      "temperatura": 10
+    },
+    "protocol_activated": null,
+    "actions": []
+  },
+  {
+    "id": "5129b205",
+    "ts": "2025-09-14T15:04:46",
+    "score": 0.4761,
+    "pct": 48,
+    "label": "BAJO",
+    "vars": {
+      "velocidad_media": 105,
+      "intensidad_lluvia": 66,
+      "nivel_inundacion_cm": 142,
+      "densidad_trafico": 13,
+      "temperatura": 10
+    },
+    "protocol_activated": null,
+    "actions": []
+  },
+  {
+    "id": "c2c77202",
+    "ts": "2025-09-14T14:46:24",
+    "score": 0.3477,
+    "pct": 35,
+    "label": "BAJO",
+    "vars": {
+      "velocidad_media": 25,
+      "intensidad_lluvia": 66,
+      "nivel_inundacion_cm": 142,
+      "densidad_trafico": 13,
+      "temperatura": 10
+    },
+    "protocol_activated": null,
+    "actions": []
+  },
+  {
+    "id": "2d2e72c0",
+    "ts": "2025-09-14T14:46:02",
+    "score": 0.8808,
+    "pct": 88,
+    "label": "ALTO",
+    "vars": {
+      "velocidad_media": 150,
+      "intensidad_lluvia": 200,
+      "nivel_inundacion_cm": 500,
+      "densidad_trafico": 100,
+      "temperatura": 50
+    },
+    "protocol_activated": null,
+    "actions": []
+  },
+  {
+    "id": "5956b7c1",
+    "ts": "2025-09-14T14:45:27",
+    "score": 0.8808,
+    "pct": 88,
+    "label": "ALTO",
+    "vars": {
+      "velocidad_media": 150,
+      "intensidad_lluvia": 200,
+      "nivel_inundacion_cm": 500,
+      "densidad_trafico": 100,
+      "temperatura": 50
+    },
+    "protocol_activated": null,
+    "actions": []
+  },
+  {
+    "id": "f6a7e0c0",
+    "ts": "2025-09-14T14:45:16",
+    "score": 0.707,
+    "pct": 71,
+    "label": "MEDIO",
+    "vars": {
+      "velocidad_media": 105,
+      "intensidad_lluvia": 113,
+      "nivel_inundacion_cm": 371,
+      "densidad_trafico": 64,
+      "temperatura": 50
+    },
+    "protocol_activated": null,
+    "actions": []
+  },
+  {
+    "id": "1ac2110f",
+    "ts": "2025-09-14T14:44:51",
+    "score": 0.351,
+    "pct": 35,
+    "label": "BAJO",
+    "vars": {
+      "velocidad_media": 37,
+      "intensidad_lluvia": 50,
+      "nivel_inundacion_cm": 125,
+      "densidad_trafico": 25,
+      "temperatura": 7
+    },
+    "protocol_activated": null,
+    "actions": []
+  },
+  {
+    "id": "0b6d79e0",
+    "ts": "2025-09-14T14:28:45",
+    "score": 0.6187,
+    "pct": 62,
+    "label": "MEDIO",
+    "vars": {
+      "velocidad_media": 85,
+      "intensidad_lluvia": 108,
+      "nivel_inundacion_cm": 272,
+      "densidad_trafico": 64,
+      "temperatura": 34
+    },
+    "protocol_activated": null,
+    "actions": []
+  },
+  {
+    "id": "f44e9df6",
+    "ts": "2025-09-14T14:28:20",
+    "score": 0.351,
+    "pct": 35,
+    "label": "BAJO",
+    "vars": {
+      "velocidad_media": 37,
+      "intensidad_lluvia": 50,
+      "nivel_inundacion_cm": 125,
+      "densidad_trafico": 25,
+      "temperatura": 7
+    },
+    "protocol_activated": null,
+    "actions": []
+  },
+  {
     "id": "be841020",
     "ts": "2025-09-14T14:05:55",
     "score": 0.3236,

@@ -159,6 +159,8 @@ if section == "Precog: Monitor de Riesgo":
             st.success(f"Riesgo: {result['pct']}% — {label_and_color(result['score'])[0]}")
             mostrar_contribuciones(result["contribuciones"])
 
+            mostrar_mapa_espana()
+
     st.subheader("Feed de eventos recientes")
     for ev in st.session_state["events"][:20]:
         st.markdown(f"- **{ev['ts']}** — {ev['label']} — `{ev['id']}` — {ev['vars']}")

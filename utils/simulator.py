@@ -35,10 +35,10 @@ def simulate_and_record(inputs: dict):
     return {"precog": result, "incident": incident}
 
 def _label_from_score(score: float) -> str:
-    if score <= 0.59:
+    if score <= 0.50:
         return "BAJO"
-    if score <= 0.74:
+    if score <= 0.70:
         return "MEDIO"
-    if score <= 0.89:
+    if score <= 0.80:
         return "ALTO"
     return "CRÍTICO"
