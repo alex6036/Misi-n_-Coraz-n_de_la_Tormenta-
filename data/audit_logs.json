@@ -1,5 +1,20 @@
 [
   {
+    "ts": "2025-09-15T21:51:15",
+    "action": "Notificar",
+    "detail": "Estado: RENACIMIENTO"
+  },
+  {
+    "ts": "2025-09-15T21:51:07",
+    "action": "Notificar",
+    "detail": "Estado: CÓDIGO ROJO"
+  },
+  {
+    "ts": "2025-09-15T21:50:55",
+    "action": "Notificar",
+    "detail": "Estado: VÍSPERA"
+  },
+  {
     "ts": "2025-09-15T21:48:49",
     "action": "Notificar",
     "detail": "Estado: CÓDIGO ROJO"

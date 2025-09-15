@@ -256,15 +256,6 @@ elif section == "K-Lang: Manual de Batalla":
 
     # Cargamos información de protocols.json (si existe)
     protocolos_data = read_json("protocols.json", {})
-    info = protocolos_data.get(protocolo_sel, {})
-
-    st.markdown(f"### **{protocolo_sel}**")
-    st.markdown(f"**Descripción:** {info.get('descripcion', '(Sin descripción)')}")
-    st.markdown(f"**Trigger:** {info.get('trigger', '(No especificado)')}")
-
-    st.markdown("**Secuencia de acciones:**")
-    for i, step in enumerate(info.get("steps", []), 1):
-        st.markdown(f"{i}. {step}")
 
     # --- Componente 2: Simulador de Protocolos ---
     st.subheader("Simulador de condiciones en tiempo real")
@@ -280,18 +271,14 @@ elif section == "K-Lang: Manual de Batalla":
         v_traf = st.slider("Tráfico (%)", 0, 100, 30)
 
     # --- Evaluación de protocolos ---
-    active = None
-    variant = None
+    active, variant = None, None
 
     if v_wind >= 110 or v_inund >= 150:
-        active = "RENACIMIENTO"
-        variant = "THANOS"
+        active, variant = "RENACIMIENTO", "THANOS"
     elif v_wind >= 95:
-        active = "CÓDIGO ROJO"
-        variant = "TITÁN"
-    elif v_wind >= 0 or v_inund >= 20:
-        active = "VÍSPERA"
-        variant = "CELESTIALES"
+        active, variant = "CÓDIGO ROJO", "TITÁN"
+    elif v_wind >= 40 or v_inund >= 20:   # ← corregido (antes estaba v_wind >= 0)
+        active, variant = "VÍSPERA", "CELESTIALES"
     else:
         # Si no hay protocolo por condiciones extremas, calculamos con Precog
         score = predecir_riesgo({
@@ -304,6 +291,22 @@ elif section == "K-Lang: Manual de Batalla":
         if score <= 0.4:
             active = "RENACIMIENTO"
 
+    # --- Mostrar información del protocolo ---
+    if active:
+        protocolo_mostrar = active
+    else:
+        protocolo_mostrar = protocolo_sel
+
+    info = protocolos_data.get(protocolo_mostrar, {})
+
+    st.markdown(f"### **{protocolo_mostrar}**")
+    st.markdown(f"**Descripción:** {info.get('descripcion', '(Sin descripción)')}")
+    st.markdown(f"**Trigger:** {info.get('trigger', '(No especificado)')}")
+
+    st.markdown("**Secuencia de acciones:**")
+    for i, step in enumerate(info.get("steps", []), 1):
+        st.markdown(f"{i}. {step}")
+
     # --- Indicador de protocolo activo ---
     st.subheader("Estado del Protocolo")
     if active:
@@ -312,13 +315,19 @@ elif section == "K-Lang: Manual de Batalla":
             unsafe_allow_html=True
         )
     else:
-        st.markdown("<h3 style='color:green; text-align:center;'>No hay protocolos activos</h3>", unsafe_allow_html=True)
-    
+        st.markdown(
+            "<h3 style='color:green; text-align:center;'>No hay protocolos activos</h3>",
+            unsafe_allow_html=True
+        )
+
+    # --- Acciones rápidas ---
     st.subheader("Acciones rápidas")
     col_a, col_b, col_c = st.columns(3)
 
     if col_a.button("Notificar"):
-        log_action = {"ts": time.strftime("%Y-%m-%dT%H:%M:%S"), "action": "Notificar", "detail": f"Estado: {active}"}
+        log_action = {"ts": time.strftime("%Y-%m-%dT%H:%M:%S"),
+                      "action": "Notificar",
+                      "detail": f"Estado: {active if active else protocolo_sel}"}
         aud = read_json("audit_logs.json", [])
         aud.insert(0, log_action)
         write_json("audit_logs.json", aud)
@@ -327,6 +336,7 @@ elif section == "K-Lang: Manual de Batalla":
         st.info("Responsable asignado (demo).")
     if col_c.button("Marcar paso ejecutado"):
         st.success("Paso marcado.")
+
 # ---------------------------
 # Sección: Registro y Auditoría
 # ---------------------------
