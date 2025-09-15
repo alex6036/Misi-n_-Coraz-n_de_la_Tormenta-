@@ -248,28 +248,41 @@ elif section == "Chronos: Visión 2040":
 # ---------------------------
 elif section == "K-Lang: Manual de Batalla":
     st.header("K-Lang — Manual de Batalla Interactivo")
+
+    # --- Componente 1: Selector de Protocolos ---
     st.subheader("Selector de Protocolos")
-    proto_choice = st.selectbox("Protocolo", list(protocols.keys()))
-    proto = protocols.get(proto_choice, {})
-    st.markdown(f"**{proto_choice}** — {proto.get('descripcion','(sin descripción)')}")
-    st.write("**Ficha técnica:**")
-    st.write(f"- Trigger: {proto.get('trigger')}")
-    st.write(f"- Responsables: {', '.join(proto.get('responsables',[]))}")
-    st.write("**Secuencia de acciones:**")
-    for i, step in enumerate(proto.get("steps", []), 1):
-        st.write(f"{i}. {step}")
+    protocolos_disponibles = ["VÍSPERA", "CÓDIGO ROJO", "RENACIMIENTO"]
+    protocolo_sel = st.radio("Selecciona un protocolo", protocolos_disponibles)
 
-    st.subheader("Simulador de condiciones reales")
-    # Simulador: sliders típicos
-    v_wind = st.slider("Velocidad del viento (km/h)", 0, 150, 30)
-    v_inund = st.slider("Nivel de inundación (cm)", 0, 500, 5)
-    v_temp = st.slider("Temperatura (°C)", -20, 50, 15)
-    v_traf = st.slider("Densidad tráfico (%)", 0, 100, 40)
+    # Cargamos información de protocols.json (si existe)
+    protocolos_data = read_json("protocols.json", {})
+    info = protocolos_data.get(protocolo_sel, {})
 
-    # Evaluar reglas simples (las mismas que en protocols.json)
-    # Regla sencilla: comprobar umbrales básicos
+    st.markdown(f"### **{protocolo_sel}**")
+    st.markdown(f"**Descripción:** {info.get('descripcion', '(Sin descripción)')}")
+    st.markdown(f"**Trigger:** {info.get('trigger', '(No especificado)')}")
+
+    st.markdown("**Secuencia de acciones:**")
+    for i, step in enumerate(info.get("steps", []), 1):
+        st.markdown(f"{i}. {step}")
+
+    # --- Componente 2: Simulador de Protocolos ---
+    st.subheader("Simulador de condiciones en tiempo real")
+    col1, col2, col3, col4 = st.columns(4)
+
+    with col1:
+        v_wind = st.slider("Velocidad del viento (km/h)", 0, 150, 30)
+    with col2:
+        v_inund = st.slider("Nivel de inundación (cm)", 0, 500, 10)
+    with col3:
+        v_temp = st.slider("Temperatura (°C)", -20, 50, 15)
+    with col4:
+        v_traf = st.slider("Tráfico (%)", 0, 100, 30)
+
+    # --- Evaluación de protocolos ---
     active = None
     variant = None
+
     if v_wind >= 110 and v_inund >= 150:
         active = "CÓDIGO ROJO"
         variant = "TITÁN"
@@ -278,8 +291,7 @@ elif section == "K-Lang: Manual de Batalla":
     elif v_wind >= 60 or v_inund >= 20:
         active = "VÍSPERA"
     else:
-        # Si score bajo
-        # calculamos score de precog
+        # Si no hay protocolo por condiciones extremas, calculamos con Precog
         score = predecir_riesgo({
             "velocidad_media": v_wind,
             "intensidad_lluvia": 0,
@@ -290,18 +302,19 @@ elif section == "K-Lang: Manual de Batalla":
         if score <= 0.4:
             active = "RENACIMIENTO"
 
-    st.subheader("Estado de protocolo actual")
+    # --- Indicador de protocolo activo ---
+    st.subheader("Estado del Protocolo")
     if active:
-        if variant:
-            st.error(f"PROTOCOLO ACTIVO: {active}: {variant}")
-        else:
-            st.error(f"PROTOCOLO ACTIVO: {active}")
+        st.markdown(
+            f"<h2 style='color:red; text-align:center;'>PROTOCOLO ACTIVO: {active}{' — '+variant if variant else ''}</h2>",
+            unsafe_allow_html=True
+        )
     else:
-        st.success("Ningún protocolo activo")
-
-    # Acciones rápidas que registran auditoría
-    st.write("Acciones rápidas:")
+        st.markdown("<h3 style='color:green; text-align:center;'>No hay protocolos activos</h3>", unsafe_allow_html=True)
+    
+    st.subheader("Acciones rápidas")
     col_a, col_b, col_c = st.columns(3)
+
     if col_a.button("Notificar"):
         log_action = {"ts": time.strftime("%Y-%m-%dT%H:%M:%S"), "action": "Notificar", "detail": f"Estado: {active}"}
         aud = read_json("audit_logs.json", [])
