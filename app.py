@@ -312,10 +312,6 @@ elif section == "K-Lang: Manual de Batalla":
             for i, step in enumerate(info_active.get("steps", []), 1):
                 st.markdown(f"{i}. {step}")
 
-            st.markdown(
-                f"<h2 style='color:red; text-align:center;'>PROTOCOLO ACTIVO: {active}{' — '+variant if variant else ''}</h2>",
-                unsafe_allow_html=True
-            )
         else:
             st.markdown("No hay protocolo activo según las condiciones actuales.")
             st.markdown("<h3 style='color:green; text-align:center;'>No hay protocolos activos</h3>", unsafe_allow_html=True)
