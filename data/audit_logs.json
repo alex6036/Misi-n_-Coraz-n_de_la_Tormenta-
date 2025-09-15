@@ -1,5 +1,10 @@
 [
   {
+    "ts": "2025-09-15T22:18:14",
+    "action": "Notificar",
+    "detail": "Estado: RENACIMIENTO"
+  },
+  {
     "ts": "2025-09-15T21:51:15",
     "action": "Notificar",
     "detail": "Estado: RENACIMIENTO"

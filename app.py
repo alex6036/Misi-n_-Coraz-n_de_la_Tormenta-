@@ -249,93 +249,95 @@ elif section == "Chronos: Visión 2040":
 elif section == "K-Lang: Manual de Batalla":
     st.header("K-Lang — Manual de Batalla Interactivo")
 
-    # --- Componente 1: Selector de Protocolos ---
-    st.subheader("Selector de Protocolos")
     protocolos_disponibles = ["VÍSPERA", "CÓDIGO ROJO", "RENACIMIENTO"]
-    protocolo_sel = st.radio("Selecciona un protocolo", protocolos_disponibles)
-
-    # Cargamos información de protocols.json (si existe)
     protocolos_data = read_json("protocols.json", {})
 
-    # --- Componente 2: Simulador de Protocolos ---
-    st.subheader("Simulador de condiciones en tiempo real")
-    col1, col2, col3, col4 = st.columns(4)
+    # Layout: columna izquierda = selector manual / info,
+    # columna derecha = simulador + protocolo activo / info
+    col_manual, col_sim = st.columns([1, 2])
 
-    with col1:
-        v_wind = st.slider("Velocidad del viento (km/h)", 0, 150, 30)
-    with col2:
-        v_inund = st.slider("Nivel de inundación (cm)", 0, 500, 10)
-    with col3:
-        v_temp = st.slider("Temperatura (°C)", -20, 50, 15)
-    with col4:
-        v_traf = st.slider("Tráfico (%)", 0, 100, 30)
+    # --- Columna izquierda: Selector manual ---
+    with col_manual:
+        st.subheader("Selector de Protocolos (manual)")
+        protocolo_sel = st.radio("Selecciona un protocolo", protocolos_disponibles, index=0, key="protocolo_sel_radio")
 
-    # --- Evaluación de protocolos ---
-    active, variant = None, None
+        info_manual = protocolos_data.get(protocolo_sel, {})
+        st.markdown(f"### **{protocolo_sel}** (seleccionado manualmente)")
+        st.markdown(f"**Descripción:** {info_manual.get('descripcion', '(Sin descripción)')}")
+        st.markdown(f"**Trigger:** {info_manual.get('trigger', '(No especificado)')}")
+        st.markdown("**Secuencia de acciones:**")
+        for i, step in enumerate(info_manual.get("steps", []), 1):
+            st.markdown(f"{i}. {step}")
 
-    if v_wind >= 110 or v_inund >= 150:
-        active, variant = "RENACIMIENTO", "THANOS"
-    elif v_wind >= 95:
-        active, variant = "CÓDIGO ROJO", "TITÁN"
-    elif v_wind >= 40 or v_inund >= 20:   # ← corregido (antes estaba v_wind >= 0)
-        active, variant = "VÍSPERA", "CELESTIALES"
-    else:
-        # Si no hay protocolo por condiciones extremas, calculamos con Precog
-        score = predecir_riesgo({
-            "velocidad_media": v_wind,
-            "intensidad_lluvia": 0,
-            "nivel_inundacion_cm": v_inund,
-            "densidad_trafico": v_traf,
-            "temperatura": v_temp
-        })["score"]
-        if score <= 0.4:
-            active = "RENACIMIENTO"
+    # --- Columna derecha: Simulador y protocolo activo ---
+    with col_sim:
+        st.subheader("Simulador de condiciones en tiempo real")
+        s1, s2, s3, s4 = st.columns(4)
+        with s1:
+            v_wind = st.slider("Velocidad del viento (km/h)", 0, 150, 30, key="v_wind")
+        with s2:
+            v_inund = st.slider("Nivel de inundación (cm)", 0, 500, 10, key="v_inund")
+        with s3:
+            v_temp = st.slider("Temperatura (°C)", -20, 50, 15, key="v_temp")
+        with s4:
+            v_traf = st.slider("Tráfico (%)", 0, 100, 30, key="v_traf")
 
-    # --- Mostrar información del protocolo ---
-    if active:
-        protocolo_mostrar = active
-    else:
-        protocolo_mostrar = protocolo_sel
+        # --- Evaluación de protocolos (automática) ---
+        active, variant = None, None
+        if v_wind >= 100 and v_wind < 151 :
+            active, variant = "RENACIMIENTO", "THANOS"
+        elif v_wind >= 50 and v_wind < 100:
+            active, variant = "CÓDIGO ROJO", "TITÁN"
+        elif v_wind >= 0  and v_wind < 50:
+            active, variant = "VÍSPERA", "CELESTIALES"
+        else:
+            # Si no hay protocolo por condiciones extremas, calculamos con Precog
+            score = predecir_riesgo({
+                "velocidad_media": v_wind,
+                "intensidad_lluvia": 0,
+                "nivel_inundacion_cm": v_inund,
+                "densidad_trafico": v_traf,
+                "temperatura": v_temp
+            })["score"]
+            if score <= 0.4:
+                active = "RENACIMIENTO"
 
-    info = protocolos_data.get(protocolo_mostrar, {})
+        st.markdown("### Protocolo activo (según condiciones)")
+        if active:
+            info_active = protocolos_data.get(active, {})
+            st.markdown(f"**{active}{' — '+variant if variant else ''}**")
+            st.markdown(f"**Descripción:** {info_active.get('descripcion', '(Sin descripción)')}")
+            st.markdown(f"**Trigger:** {info_active.get('trigger', '(No especificado)')}")
+            st.markdown("**Secuencia de acciones:**")
+            for i, step in enumerate(info_active.get("steps", []), 1):
+                st.markdown(f"{i}. {step}")
 
-    st.markdown(f"### **{protocolo_mostrar}**")
-    st.markdown(f"**Descripción:** {info.get('descripcion', '(Sin descripción)')}")
-    st.markdown(f"**Trigger:** {info.get('trigger', '(No especificado)')}")
+            st.markdown(
+                f"<h2 style='color:red; text-align:center;'>PROTOCOLO ACTIVO: {active}{' — '+variant if variant else ''}</h2>",
+                unsafe_allow_html=True
+            )
+        else:
+            st.markdown("No hay protocolo activo según las condiciones actuales.")
+            st.markdown("<h3 style='color:green; text-align:center;'>No hay protocolos activos</h3>", unsafe_allow_html=True)
 
-    st.markdown("**Secuencia de acciones:**")
-    for i, step in enumerate(info.get("steps", []), 1):
-        st.markdown(f"{i}. {step}")
-
-    # --- Indicador de protocolo activo ---
-    st.subheader("Estado del Protocolo")
-    if active:
-        st.markdown(
-            f"<h2 style='color:red; text-align:center;'>PROTOCOLO ACTIVO: {active}{' — '+variant if variant else ''}</h2>",
-            unsafe_allow_html=True
-        )
-    else:
-        st.markdown(
-            "<h3 style='color:green; text-align:center;'>No hay protocolos activos</h3>",
-            unsafe_allow_html=True
-        )
-
-    # --- Acciones rápidas ---
+    # --- Acciones rápidas (abajo, globales) ---
     st.subheader("Acciones rápidas")
     col_a, col_b, col_c = st.columns(3)
 
     if col_a.button("Notificar"):
-        log_action = {"ts": time.strftime("%Y-%m-%dT%H:%M:%S"),
-                      "action": "Notificar",
-                      "detail": f"Estado: {active if active else protocolo_sel}"}
+        detail = f"Manual: {protocolo_sel}; Activo: {active}"
+        log_action = {"ts": time.strftime("%Y-%m-%dT%H:%M:%S"), "action": "Notificar", "detail": detail}
         aud = read_json("audit_logs.json", [])
         aud.insert(0, log_action)
         write_json("audit_logs.json", aud)
         st.info("Notificado.")
+
     if col_b.button("Asignar Responsable"):
         st.info("Responsable asignado (demo).")
+
     if col_c.button("Marcar paso ejecutado"):
         st.success("Paso marcado.")
+
 
 # ---------------------------
 # Sección: Registro y Auditoría
