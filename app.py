@@ -281,34 +281,28 @@ elif section == "K-Lang: Manual de Batalla":
 
     # --- Evaluación de protocolos ---
     active = None
-variant = None
+    variant = None
 
-# --- REGLAS FIJAS ---
-if v_wind >= 110 and v_inund >= 150:
-    active = "CÓDIGO ROJO"
-    variant = "TITÁN"
-elif v_wind >= 90 or v_inund >= 80:
-    active = "CÓDIGO ROJO"
-elif v_wind >= 60 or v_inund >= 20:
-    active = "VÍSPERA"
-
-# --- SOLO SI NO HAY PROTOCOLO ACTIVO, PREGUNTO AL MODELO ---
-if not active:
-    score = predecir_riesgo({
-        "velocidad_media": v_wind,
-        "intensidad_lluvia": 0,
-        "nivel_inundacion_cm": v_inund,
-        "densidad_trafico": v_traf,
-        "temperatura": v_temp
-    })["score"]
-
-    st.caption(f"🔎 **Score de riesgo:** {score:.2f}")  # Para depurar
-
-    if score <= 0.2:  
+    if v_wind >= 110 or v_inund >= 150:
         active = "RENACIMIENTO"
+        variant = "THANOS"
+    elif v_wind >= 95:
+        active = "CÓDIGO ROJO"
+        variant = "TITÁN"
+    elif v_wind >= 0 or v_inund >= 20:
+        active = "VÍSPERA"
+        variant = "CELESTIALES"
     else:
-        active = None  # Ningún protocolo activo
-
+        # Si no hay protocolo por condiciones extremas, calculamos con Precog
+        score = predecir_riesgo({
+            "velocidad_media": v_wind,
+            "intensidad_lluvia": 0,
+            "nivel_inundacion_cm": v_inund,
+            "densidad_trafico": v_traf,
+            "temperatura": v_temp
+        })["score"]
+        if score <= 0.4:
+            active = "RENACIMIENTO"
 
     # --- Indicador de protocolo activo ---
     st.subheader("Estado del Protocolo")
@@ -333,7 +327,6 @@ if not active:
         st.info("Responsable asignado (demo).")
     if col_c.button("Marcar paso ejecutado"):
         st.success("Paso marcado.")
-
 # ---------------------------
 # Sección: Registro y Auditoría
 # ---------------------------

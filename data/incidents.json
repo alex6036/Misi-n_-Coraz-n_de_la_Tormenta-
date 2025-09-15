@@ -1,5 +1,21 @@
 [
   {
+    "id": "6fc6267b",
+    "ts": "2025-09-15T21:46:21",
+    "score": 0.351,
+    "pct": 35,
+    "label": "BAJO",
+    "vars": {
+      "velocidad_media": 37,
+      "intensidad_lluvia": 50,
+      "nivel_inundacion_cm": 125,
+      "densidad_trafico": 25,
+      "temperatura": 7
+    },
+    "protocol_activated": null,
+    "actions": []
+  },
+  {
     "id": "33101709",
     "ts": "2025-09-15T12:56:39",
     "score": 0.6751,
