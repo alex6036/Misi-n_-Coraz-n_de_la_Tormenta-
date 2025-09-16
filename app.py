@@ -284,11 +284,11 @@ elif section == "K-Lang: Manual de Batalla":
 
         # --- Evaluación de protocolos (automática) ---
         active, variant = None, None
-        if v_wind >= 100 and v_wind < 151 :
+        if v_wind < 30  or v_inund < 50:
             active, variant = "RENACIMIENTO", "THANOS"
-        elif v_wind >= 50 and v_wind < 100:
+        elif v_wind >= 90 or v_inund >=80:
             active, variant = "CÓDIGO ROJO", "TITÁN"
-        elif v_wind >= 0  and v_wind < 50:
+        elif v_wind >= 60  or v_inund >= 20:
             active, variant = "VÍSPERA", "CELESTIALES"
         else:
             # Si no hay protocolo por condiciones extremas, calculamos con Precog
