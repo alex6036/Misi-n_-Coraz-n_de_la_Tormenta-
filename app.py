@@ -283,13 +283,21 @@ elif section == "K-Lang: Manual de Batalla":
             v_traf = st.slider("Tráfico (%)", 0, 100, 30, key="v_traf")
 
         # --- Evaluación de protocolos (automática) ---
+        # Determinar protocolo activo según sensores
         active, variant = None, None
-        if v_wind < 30  or v_inund < 50:
-            active, variant = "RENACIMIENTO", "THANOS"
-        elif v_wind >= 90 or v_inund >=80:
+
+        # 1️⃣ Mayor prioridad: Código Rojo Titán
+        if v_wind >= 90 or v_inund >= 80:
             active, variant = "CÓDIGO ROJO", "TITÁN"
-        elif v_wind >= 60  or v_inund >= 20:
+
+        # 2️⃣ Prioridad media: Víspera Celestiales
+        elif v_wind >= 60 or v_inund >= 20:
             active, variant = "VÍSPERA", "CELESTIALES"
+
+        # 3️⃣ Prioridad baja: Renacimiento Thanos
+        elif v_wind < 30 or v_inund < 50:
+            active, variant = "RENACIMIENTO", "THANOS"
+
         else:
             # Si no hay protocolo por condiciones extremas, calculamos con Precog
             score = predecir_riesgo({
